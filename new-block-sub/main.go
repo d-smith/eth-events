@@ -8,9 +8,12 @@ import (
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
+
+	//Eth client set up
 	wsEndPoint := os.Getenv("WS_END_POINT")
 	if wsEndPoint == "" {
 		log.Fatal("WS_END_POINT is not set")
@@ -20,6 +23,19 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Nats client set up
+	natsURL := os.Getenv("NATS_URL")
+	if natsURL == "" {
+		log.Fatal("NATS_URL is not set")
+	}
+
+	nc, err := nats.Connect(natsURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer nc.Close()
 
 	headers := make(chan *types.Header)
 	sub, err := client.SubscribeNewHead(context.Background(), headers)
@@ -37,6 +53,10 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
+
+			nc.Publish("blocks",
+				[]byte(fmt.Sprintf("%d:%s", block.Number().Uint64(),
+					block.Hash().Hex())))
 
 			fmt.Println("Block:", block.Hash().Hex())             // 0xbc10defa8dda384c96a17640d84de5578804945d347072e091b4e5f390ddea7f
 			fmt.Println("  Block no.:", block.Number().Uint64())  // 3477413
