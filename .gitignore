@@ -1,2 +1,4 @@
 .env
 .certora_internal
+.idea
+target/
