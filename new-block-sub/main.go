@@ -55,8 +55,7 @@ func main() {
 			}
 
 			nc.Publish("blocks",
-				[]byte(fmt.Sprintf("%d:%s", block.Number().Uint64(),
-					block.Hash().Hex())))
+				[]byte(fmt.Sprintf("%s", block.Number().Text(16))))
 
 			fmt.Println("Block:", block.Hash().Hex())             // 0xbc10defa8dda384c96a17640d84de5578804945d347072e091b4e5f390ddea7f
 			fmt.Println("  Block no.:", block.Number().Uint64())  // 3477413
@@ -64,6 +63,7 @@ func main() {
 			fmt.Println("  Nonce:", block.Nonce())                // 130524141876765836
 			fmt.Println("  No. Txns:", len(block.Transactions())) // 7
 			for _, tx := range block.Transactions() {
+				nc.Publish("transactions", []byte(tx.Hash().Hex()))
 				fmt.Println("    Tx hash:", tx.Hash().Hex()) // 0xdec1d607c6c9d9d3e...
 			}
 		}
