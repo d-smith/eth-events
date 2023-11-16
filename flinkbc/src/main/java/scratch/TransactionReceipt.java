@@ -22,7 +22,7 @@ public class TransactionReceipt {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
 
-            String payload = "{\"jsonrpc\":\"2.0\",\"method\":\"eth_getTransactionByHash\",\"params\":[\"0x647d4c494a0bf98e3c128415696e689f359f7c0397b77da0a7b000bc2ea79c5e\"],\"id\":1}";
+            String payload = "{\"jsonrpc\":\"2.0\",\"method\":\"eth_getTransactionByHash\",\"params\":[\"0xa9f5304d45c620517eb7b8f31e4bdc6e2c0db6c14c7f118947343dbca9a2dc90\"],\"id\":1}";
 
             OutputStream os = conn.getOutputStream();
             os.write(payload.getBytes());
