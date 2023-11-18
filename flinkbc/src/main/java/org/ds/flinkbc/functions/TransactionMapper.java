@@ -83,7 +83,7 @@ public class TransactionMapper implements FlatMapFunction<String, TransactionRec
             tr.setBlockNumber(txn.getString("blockNumber"));
             tr.setFrom(txn.getString("from"));
             tr.setStatus(txn.getString("status"));
-            tr.setType(txn.getString("type"));
+            tr.setType(extractVal(txn, "type"));
             tr.setContractAddress(extractVal(txn, "contractAddress"));
             tr.setCumulativeGasUsed(txn.getString("cumulativeGasUsed"));
             tr.setEffectiveGasPrice(txn.getString("effectiveGasPrice"));
