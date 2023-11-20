@@ -15,8 +15,14 @@ public class ContractListener {
     private static final String CONTRACT_ADDR = "0xC0a4b9e04fB55B1b498c634FAEeb7C8dD5895b53";
 
     public static void main(String[] args) throws Exception {
+
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         NatsStreamSource nss = new NatsStreamSource(NATS_URL, "sc","transactions");
+
+        Thread printingHook = new Thread(() -> nss.cancel());
+        Runtime.getRuntime().addShutdownHook(printingHook);
+
+
         DataStream<String> txnStream = env.addSource(nss)
                 .name("raw txn stream").uid("raw txn stream");
 

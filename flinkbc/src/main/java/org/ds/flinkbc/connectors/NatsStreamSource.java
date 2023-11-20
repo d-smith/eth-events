@@ -70,6 +70,7 @@ public class NatsStreamSource extends RichSourceFunction<String> {
 
     @Override
     public void cancel() {
+        LOG.info("cancel called");
         this.running = false;
     }
 }
