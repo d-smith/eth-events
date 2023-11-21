@@ -2,6 +2,7 @@ package org.ds.flinkbc.functions;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+import org.ds.flinkbc.pojos.LogEntry;
 import org.ds.flinkbc.pojos.TransactionReceipt;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionMapper implements FlatMapFunction<String, TransactionReceipt> {
 
@@ -90,6 +93,39 @@ public class TransactionMapper implements FlatMapFunction<String, TransactionRec
             tr.setTransactionHash(txn.getString("transactionHash"));
             tr.setTransactionIndex(txn.getString("transactionIndex"));
             tr.setGasUsed(txn.getString("gasUsed"));
+
+            List<LogEntry> logs = new ArrayList<>();
+            tr.setLogs(logs);
+
+            JSONArray txnLogs = txn.getJSONArray("logs");
+            if(txnLogs != null) {
+
+               txnLogs.forEach(entry-> {
+                   JSONObject jo = (JSONObject) entry;
+                   LogEntry le = new LogEntry();
+                   le.setTransactionHash(jo.getString("transactionHash"));
+                   le.setTransactionIndex(jo.getString("transactionIndex"));
+                   le.setData(jo.getString("data"));
+                   le.setBlockNumber(jo.getString("blockNumber"));
+                   le.setBlockHash(jo.getString("blockHash"));
+                   le.setAddress(jo.getString("address"));
+                   le.setRemoved(jo.getBoolean("removed"));
+                   le.setLogIndex(jo.getString("logIndex"));
+
+                   List<String> topics = new ArrayList<>();
+                   le.setTopics(topics);
+
+                   JSONArray logTopics = jo.getJSONArray("topics");
+                   if(logTopics != null) {
+                       logTopics.forEach(topic -> {
+                           topics.add((String)topic);
+                       });
+                   }
+
+                   logs.add(le);
+               });
+            }
+
 
             collector.collect(tr);
 

@@ -3,6 +3,8 @@ package org.ds.flinkbc.pojos;
 
 import lombok.Data;
 
+import java.util.List;
+
 /*
 POJO to hold transaction receipt data, e.g.
 
@@ -41,19 +43,17 @@ POJO to hold transaction receipt data, e.g.
  */
 @Data
 public class TransactionReceipt {
-    //TODO - allow log section to be embedded in the POJO
-    public String blockHash;
-    public String contractAddress;
-    public String transactionIndex;
-    public String type;
-    public String transactionHash;
-    public String gasUsed;
-    public String blockNumber;
-    public String cumulativeGasUsed;
-    public String from;
-    public String to;
-    public String effectiveGasPrice;
-    public String status;
-
-
+    private String blockHash;
+    private String contractAddress;
+    private String transactionIndex;
+    private String type;
+    private String transactionHash;
+    private String gasUsed;
+    private String blockNumber;
+    private String cumulativeGasUsed;
+    private String from;
+    private String to;
+    private String effectiveGasPrice;
+    private String status;
+    public List<LogEntry> logs;
 }
